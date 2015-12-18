@@ -1,0 +1,12 @@
+prefix=/tmp/RtmpQWymdU/Rbuild27854c06e94a/lpsymphony/src/SYMPHONY
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/coin
+
+Name: SYMPHONY
+Description: SYMPHONY MILP Solver Framework
+URL: https://projects.coin-or.org/SYMPHONY
+Version: 5.6.10
+Libs: -L${libdir} -lSymAppl  -lgomp
+Cflags: -I${includedir} -fopenmp
+Requires: cgl osi-clp coinutils osi 

@@ -1,0 +1,12 @@
+## so now the dlls are loaded correctly
+
+SHLIB: lpsymphony
+
+PKG_CPPFLAGS = -ISYMPHONY/include
+PKG_LIBS = -llpsymphony -lm -L
+R_symphony.o: lpsymphony
+
+lpsymphony: 
+		cp WinLib$(R_ARCH)/*.dll .
+		
+

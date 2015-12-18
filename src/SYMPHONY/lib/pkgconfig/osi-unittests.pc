@@ -1,0 +1,12 @@
+prefix=/tmp/RtmpQWymdU/Rbuild27854c06e94a/lpsymphony/src/SYMPHONY
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/coin
+
+Name: OsiUnitTests
+Description: COIN-OR Open Solver Interface Common Unit Tests
+URL: https://projects.coin-or.org/Osi
+Version: 0.107.4
+Libs: -L${libdir} -lOsiCommonTests
+Cflags: -I${includedir}
+Requires: osi

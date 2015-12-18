@@ -1,0 +1,38 @@
+Package: lpsymphony
+Title: Symphony integer linear programming solver in R
+Version: 0.99.2
+Description: The package derives from Rsymphony, R interface to
+    SYMPHONY on CRAN, open-source linear programming solver written in
+    C++. Unlike Rsymphony, the package includes the solver source code
+    directly. The configure script makes the installation process easier
+    on Mac OS and Linux. Windows DLLs make it possible to install the
+    package with Rtools.
+Authors@R: c(person("Vladislav", "Kim", role = c("aut", "cre"),
+            email = "Vladislav.Kim@embl.de"),
+            person("Ted", "Ralphs", role = "aut",
+	    email = "ted@lehigh.edu"),
+	    person("Reinhard", "Harter", role = "ctb",
+            email = "reinhard.harter@gmail.com"),
+            person("Kurt", "Hornik", role = "ctb",
+            email = "Kurt.Hornik@R-project.org"),
+            person("Cyrille", "Szymanski", role = "ctb",
+            email = "cnszym@gmail.com"))
+License: EPL
+Depends: R (>= 3.0.0)
+Enhances: slam
+Suggests: BiocStyle, knitr
+URL: http://R-Forge.R-project.org/projects/rsymphony,
+        https://projects.coin-or.org/SYMPHONY,
+        http://www.coin-or.org/download/source/SYMPHONY/
+biocViews: Infrastructure, ThirdPartyClient
+VignetteBuilder: knitr
+NeedsCompilation: yes
+Repository: Bioconductor
+Date/Publication: 2015-12-04 11:04:39
+Packaged: 2015-12-17 10:15:01 UTC; vlad
+Author: Vladislav Kim [aut, cre],
+  Ted Ralphs [aut],
+  Reinhard Harter [ctb],
+  Kurt Hornik [ctb],
+  Cyrille Szymanski [ctb]
+Maintainer: Vladislav Kim <Vladislav.Kim@embl.de>

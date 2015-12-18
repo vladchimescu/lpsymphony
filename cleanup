@@ -1,0 +1,20 @@
+#! /bin/sh
+(cd src/SYMPHONY; 
+  if test -f Makefile; then
+    make distclean || true
+    make distclean SUBDIRS= || true
+  fi)
+rm -f config.* autom4te.cache src/SYMPHONY.ts src/Makevars \
+    src/SYMPHONY/lib/libCgl.a src/SYMPHONY/lib/libCgl.la \
+    src/SYMPHONY/lib/libClp.a src/SYMPHONY/lib/libClp.la \
+    src/SYMPHONY/lib/libClpSolver.a src/SYMPHONY/lib/libClpSolver.la \
+    src/SYMPHONY/lib/libCoinUtils.a src/SYMPHONY/lib/libCoinUtils.la \
+    src/SYMPHONY/lib/libOsi.a src/SYMPHONY/lib/libOsi.la \
+    src/SYMPHONY/lib/libOsiClp.a src/SYMPHONY/lib/libOsiClp.la \
+    src/SYMPHONY/lib/libOsiCommonTests.a \
+    src/SYMPHONY/lib/libOsiCommonTests.la src/SYMPHONY/lib/libOsiSym.a \
+    src/SYMPHONY/lib/libOsiSym.la src/SYMPHONY/lib/libSym.a \
+    src/SYMPHONY/lib/libSym.la 
+rm -rf src/WinLib
+
+exit 0
