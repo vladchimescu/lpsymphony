@@ -1,13 +1,7 @@
 Package: lpsymphony
 Title: Symphony integer linear programming solver in R
-Version: 0.99.3
-Description: This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to
-    SYMPHONY, an open-source linear programming solver written in
-    C++. The main difference between this package and Rsymphony is that it includes the solver source code
-    (SYMPHONY version 5.6), which Rsymphony expects to find header and library files on the users' system.
-    Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY.
-    The package contains a substantial amount of C code, the building of which is controlled by the configure script.
-    For Windows, precompiled DLLs are included in this package.
+Version: 0.99.4
+Description: This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.
 Maintainer: Vladislav Kim <Vladislav.Kim@embl.de>
 Authors@R: c(person("Vladislav", "Kim", role = c("aut", "cre"),
             email = "Vladislav.Kim@embl.de"),
