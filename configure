@@ -65,14 +65,6 @@ EOF
 			# so if default gcc works, don't do anything
 			GCC_COMPILER="`${R} CMD config CC`"
 			GPP_COMPILER="`${R} CMD config CXX`"
-			# -v: use verbose linker option (?)
-			LD_LOC=""
-			OMP_FLAG="--enable-openmp"
-		#elif [ $? -ne 0 ] -a [ -d "$XCODE_ORDNER" ]; then
-			#GCC_COMPILER="${XCODE_ORDNER}/bin/gcc"
-			#GPP_COMPILER="${XCODE_ORDNER}/bin/g++"
-			#LD_LOC=	"-L${XCODE_ORDNER}/lib"
-			#OMP_FLAG="--enable-openmp"
 		elif [ $? -ne 0 ] -a [ -d "$BREW_ORDNER/gcc" ]; then
 			GCC_LIST=("${BREW_ORDNER}/gcc/4."*)
 			# count the number of GCC compilers in Cellar
@@ -114,18 +106,14 @@ EOF
 
             rm -f test.*
 	    (cd src/SYMPHONY && \
-		./configure \
+		./configure CC="${GCC_COMPILER}" CXX="${GPP_COMPILER}" \
 		--enable-static --disable-shared --with-pic \
 		--with-application=no --disable-dependency-tracking \
 		--disable-zlib --disable-bzlib "${OMP_FLAG}" \
 		# may be need to add --disable-openmp (not sure)
 		--disable-cplex-libcheck --disable-glpk-libcheck \
 		--disable-osl-libcheck --disable-soplex-libcheck \
-		--disable-xpress-libcheck \
-		# the following 3 variables have to be set conditionally
-		CC="${GCC_COMPILER}" \
-		CXX="${GPP_COMPILER}" \ 
-		LDFLAGS="${LD_LOC}")
+		--disable-xpress-libcheck)
 	    SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
 	    SYMPHONY_INCLUDE_PATH="-ISYMPHONY/include"
 	    SYMPHONY_LIB_PATH="-LSYMPHONY/lib"

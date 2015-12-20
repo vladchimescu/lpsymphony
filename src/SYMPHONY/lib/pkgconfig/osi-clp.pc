@@ -1,4 +1,4 @@
-prefix=/tmp/RtmpQWymdU/Rbuild27854c06e94a/lpsymphony/src/SYMPHONY
+prefix=/tmp/RtmpJ5NXYE/Rbuildae54b3d1bf1/lpsymphony/src/SYMPHONY
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include/coin
