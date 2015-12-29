@@ -1,18 +1,24 @@
 Package: lpsymphony
 Title: Symphony integer linear programming solver in R
-Version: 0.99.5
+Version: 0.99.6
 Description: This package was derived from Rsymphony_0.1-17 from CRAN. These packages provide an R interface to SYMPHONY, an open-source linear programming solver written in C++. The main difference between this package and Rsymphony is that it includes the solver source code (SYMPHONY version 5.6), while Rsymphony expects to find header and library files on the users' system. Thus the intention of lpsymphony is to provide an easy to install interface to SYMPHONY. For Windows, precompiled DLLs are included in this package.
 Maintainer: Vladislav Kim <Vladislav.Kim@embl.de>
-Authors@R: c(person("Vladislav", "Kim", role = c("aut", "cre"),
-            email = "Vladislav.Kim@embl.de"),
-            person("Ted", "Ralphs", role = "aut",
-	    email = "ted@lehigh.edu"),
-	    person("Reinhard", "Harter", role = "ctb",
-            email = "reinhard.harter@gmail.com"),
-            person("Kurt", "Hornik", role = "ctb",
-            email = "Kurt.Hornik@R-project.org"),
-            person("Cyrille", "Szymanski", role = "ctb",
-            email = "cnszym@gmail.com"))
+Authors@R: c(person("Vladislav", "Kim",     role = c("aut", "cre"), email = "Vladislav.Kim@embl.de"),
+             person("Ted", "Ralphs",        role = "ctb", email = "ted@lehigh.edu"),
+             person("Menal", "Guzelsoy",    role = "ctb", email = "mguzelsoy@lehigh.edu"),
+             person("Ashutosh", "Mahajan",  role = "ctb", email = "amahajan@iitb.ac.in"),
+	     person("Reinhard", "Harter",   role = "ctb", email = "reinhard.harter@gmail.com"),
+             person("Kurt", "Hornik",       role = "ctb", email = "Kurt.Hornik@R-project.org"),
+             person("Cyrille", "Szymanski", role = "ctb", email = "cnszym@gmail.com"),
+             person("Stefan","Theussl",     role = "ctb", email = "stefan.theussl@wu.ac.at"))
+Author: Vladislav Kim [aut, cre],
+  Ted Ralphs [ctb],
+  Menal Guzelsoy [ctb],
+  Ashutosh Mahajan [ctb],
+  Reinhard Harter [ctb],
+  Kurt Hornik [ctb],
+  Cyrille Szymanski [ctb],
+  Stefan Theussl [ctb]
 License: EPL
 Depends: R (>= 3.0.0)
 Enhances: slam
@@ -24,11 +30,3 @@ biocViews: Infrastructure, ThirdPartyClient
 VignetteBuilder: knitr
 NeedsCompilation: yes
 Repository: Bioconductor
-Date/Publication: 2015-12-04 11:04:39
-Packaged: 2015-12-17 10:15:01 UTC; vlad
-Author: Vladislav Kim [aut, cre],
-  Ted Ralphs [aut],
-  Reinhard Harter [ctb],
-  Kurt Hornik [ctb],
-  Cyrille Szymanski [ctb]
-Maintainer: Vladislav Kim <Vladislav.Kim@embl.de>
