@@ -1,0 +1,149 @@
+#!/bin/bash
+
+## Find the R home directory.
+: ${R_HOME=`R RHOME`}
+if test -z "${R_HOME}"; then
+  echo "Could not determine R_HOME."
+  exit 1
+fi
+
+R="${R_HOME}/bin/R"
+
+SYMPHONY_CPPFLAGS=`pkg-config --cflags SYMPHONY >/dev/null 2>&1`
+SYMPHONY_LIBS=`pkg-config --libs SYMPHONY >/dev/null 2>&1`
+
+test -z "${SYMPHONY_LIBS}" && SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
+
+## Test whether we can compile and link a minimal program.
+rm -f conftest.*
+
+cat << EOF > conftest.cc 
+#include <coin/symphony.h>
+extern "C"
+int
+main ()
+{
+    sym_environment *env = sym_open_environment();
+    sym_close_environment(env);
+    return 0;
+}
+EOF
+
+_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_=false 
+${R} CMD SHLIB conftest.cc ${SYMPHONY_CPPFLAGS} ${SYMPHONY_LIBS} >/dev/null 2>&1
+status=${?}
+
+rm -f conftest.*
+
+if test ${status} -eq 0; then
+    SYMPHONY_INCLUDE_PATH=
+    SYMPHONY_LIB_PATH=
+    SYMPHONY_TS=
+else
+	# if Mac OS X need to specify C compiler
+        # and make sure linker flags are appropriate
+	if [[ "$OSTYPE" == "darwin"* ]]; then 
+
+		BREW_ORDNER="/usr/local/Cellar"
+		XCODE_ORDNER="/Applications/Xcode.app/Contents/Developer/usr"
+		MACPORTS_ORDNER="/opt/local"
+
+		cat << EOF > test.c
+		#include <omp.h>
+		#include <stdio.h>
+
+		int main() {
+			printf("Hey");
+			return 0;
+		}
+EOF
+
+                # first test the default gcc
+                gcc -lgomp test.c -o test >/dev/null 2>&1
+
+		if [[ $? -eq 0 ]]; then
+			# so if default gcc works, don't do anything
+			GCC_COMPILER="`${R} CMD config CC`"
+			GPP_COMPILER="`${R} CMD config CXX`"
+		elif [ $? -ne 0 ] -a [ -d "$BREW_ORDNER/gcc" ]; then
+			GCC_LIST=("${BREW_ORDNER}/gcc/4."*)
+			# count the number of GCC compilers in Cellar
+			count=0
+			minor=9
+			while [ "x${GCC_LIST[$count]}" != "x" ]; do
+				# first if() with the newest GCC compiler
+				if [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.9.2"* ]]; then
+					$minor=9
+					break
+				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.9"* ]]; then
+					$minor=9
+					break
+				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.8"* ]]; then
+					$minor=8
+					break
+				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.7"* ]]; then
+					$minor=7
+					break
+				else
+					echo "You need to install GCC in order to compile Symphony sources. "
+					echo "Currently you have only Clang c/c++ compiler "
+				fi
+				count=$(( $count + 1 ))
+			done
+			GCC_COMPILER="${GCC_LIST[count]}/bin/gcc-4.$minor"
+			GPP_COMPILER="${GCC_LIST[count]}/bin/g++-4.$minor"
+			LD_LOC=	"-L{GCC_LIST[count]}/lib/gcc/4.$minor"
+			OMP_FLAG="--enable-openmp"
+		# what to do if none of these works?
+		else
+			GCC_COMPILER="`${R} CMD config CC`"
+			GPP_COMPILER="`${R} CMD config CXX`"
+			LD_LOC="-L/usr/lib/gcc -L/usr/lib" 
+			OMP_FLAG="--disable-openmp"	
+
+		fi
+		
+
+            rm -f test.*
+	    (cd src/SYMPHONY && \
+		./configure CC="${GCC_COMPILER}" CXX="${GPP_COMPILER}" \
+		--enable-static --disable-shared --with-pic \
+		--with-application=no --disable-dependency-tracking \
+		--disable-zlib --disable-bzlib "${OMP_FLAG}" \
+		# may be need to add --disable-openmp (not sure)
+		--disable-cplex-libcheck --disable-glpk-libcheck \
+		--disable-osl-libcheck --disable-soplex-libcheck \
+		--disable-xpress-libcheck)
+	    SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
+	    SYMPHONY_INCLUDE_PATH="-ISYMPHONY/include"
+	    SYMPHONY_LIB_PATH="-LSYMPHONY/lib"
+	    SYMPHONY_TS="SYMPHONY.ts"
+
+        # for other (Unix) systems use
+        else
+	    (cd src/SYMPHONY && \
+		./configure \
+		--enable-static --disable-shared --with-pic \
+		--with-application=no --disable-dependency-tracking \
+		--disable-zlib --disable-bzlib \
+		--disable-cplex-libcheck --disable-glpk-libcheck \
+		--disable-osl-libcheck --disable-soplex-libcheck \
+		--disable-xpress-libcheck \
+		CC="`${R} CMD config CC`" \
+		CPP="`${R} CMD config CPP`" \
+		CXX="`${R} CMD config CXX`" \
+		CXXCPP="`${R} CMD config CXXCPP`" \
+		F77="`${R} CMD config F77`" \
+		FLIBS="`${R} CMD config FLIBS`")
+	    SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
+	    SYMPHONY_INCLUDE_PATH="-ISYMPHONY/include"
+	    SYMPHONY_LIB_PATH="-LSYMPHONY/lib"
+	    SYMPHONY_TS="SYMPHONY.ts"
+	fi
+fi
+
+sed -e "s|@SYMPHONY_LIBS@|${SYMPHONY_LIBS}|" \
+    -e "s|@SYMPHONY_INCLUDE_PATH@|${SYMPHONY_INCLUDE_PATH}|" \
+    -e "s|@SYMPHONY_LIB_PATH@|${SYMPHONY_LIB_PATH}|" \
+    -e "s|@SYMPHONY_TS@|${SYMPHONY_TS}|" \
+    src/Makevars.in > src/Makevars
