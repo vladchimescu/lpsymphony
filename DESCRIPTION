@@ -22,7 +22,7 @@ Author: Vladislav Kim [aut, cre],
 License: EPL
 Depends: R (>= 3.0.0)
 Enhances: slam
-Suggests: BiocStyle, knitr
+Suggests: BiocStyle, knitr, testthat
 URL: http://R-Forge.R-project.org/projects/rsymphony,
         https://projects.coin-or.org/SYMPHONY,
         http://www.coin-or.org/download/source/SYMPHONY/
