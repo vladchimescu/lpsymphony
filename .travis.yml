@@ -3,7 +3,6 @@ sudo: false
 cache: packages
 
 r:
-  - bioc-devel
   - bioc-release
 warnings_are_errors: true
 
