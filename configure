@@ -56,24 +56,15 @@ EOF
                 # first test the default gcc used by R
                 `R CMD config CC` -lgomp test.c -o test >/dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
-			# so if default gcc works, don't do anything
+			echo -e "* Using the default compiler"
 			CC="`R CMD config CC`"
 			CXX="`R CMD config CXX`"
-		elif [ -x "`command -v brew`" ]; then
-			brewdir="/usr/local/Cellar"
-			latest=`ls -v $brewdir/gcc | tail -n 1`
-			CC="$brewdir/gcc/$latest/bin/gcc-${latest:0:1}"
-			CXX="$brewdir/gcc/$latest/bin/g++-${latest:0:1}"
-			LD_LOC=	"-L$brewdir/gcc/$latest/lib/gcc/${latest:0:1}"
-			# if the OMP_FLAG is not set -> enable OpenMP
-			if [ -z "$OMP_FLAG" ]; then
-			    OMP_FLAG="--enable-openmp"
-			fi 
+			OMP_FLAG="--enable-openmp"
 		# if there is no brew gcc installed try to compile with clang
 		else
-			CC="`${R} CMD config CC`"
+		        echo -e "* Defaulting to clang/clang++"
+		        CC="`${R} CMD config CC`"
 			CXX="`${R} CMD config CXX`"
-			LD_LOC="-L/usr/lib/gcc -L/usr/lib"
 			if [ -z "$OMP_FLAG" ]; then
 			    OMP_FLAG="--disable-openmp"
 			fi 
