@@ -41,12 +41,8 @@ if test ${status} -eq 0; then
     SYMPHONY_TS=
 else
 	# if Mac OS X need to specify C compiler
-        # and make sure linker flags are appropriate
-	if [[ "$OSTYPE" == "darwin"* ]]; then 
 
-		BREW_ORDNER="/usr/local/Cellar"
-		XCODE_ORDNER="/Applications/Xcode.app/Contents/Developer/usr"
-		MACPORTS_ORDNER="/opt/local"
+	if [[ "$OSTYPE" == "darwin"* ]]; then 
 
 		cat << EOF > test.c
 		#include <omp.h>
@@ -58,59 +54,34 @@ else
 		}
 EOF
 
-                # first test the default gcc
-                gcc -lgomp test.c -o test >/dev/null 2>&1
-
+                # first test the default gcc used by R
+                `R CMD config CC` -lgomp test.c -o test >/dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
-			# so if default gcc works, don't do anything
-			GCC_COMPILER="`${R} CMD config CC`"
-			GPP_COMPILER="`${R} CMD config CXX`"
-		elif [ $? -ne 0 ] -a [ -d "$BREW_ORDNER/gcc" ]; then
-			GCC_LIST=("${BREW_ORDNER}/gcc/4."*)
-			# count the number of GCC compilers in Cellar
-			count=0
-			minor=9
-			while [ "x${GCC_LIST[$count]}" != "x" ]; do
-				# first if() with the newest GCC compiler
-				if [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.9.2"* ]]; then
-					$minor=9
-					break
-				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.9"* ]]; then
-					$minor=9
-					break
-				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.8"* ]]; then
-					$minor=8
-					break
-				elif [[ "${GCC_LIST[$count]}" == "${BREW_ORDNER}/gcc/4.7"* ]]; then
-					$minor=7
-					break
-				else
-					echo "You need to install GCC in order to compile Symphony sources. "
-					echo "Currently you have only Clang c/c++ compiler "
-				fi
-				count=$(( $count + 1 ))
-			done
-			GCC_COMPILER="${GCC_LIST[count]}/bin/gcc-4.$minor"
-			GPP_COMPILER="${GCC_LIST[count]}/bin/g++-4.$minor"
-			LD_LOC=	"-L{GCC_LIST[count]}/lib/gcc/4.$minor"
+			echo -e "* Using the default compiler"
+			CC="`R CMD config CC`"
+			CXX="`R CMD config CXX`"
 			OMP_FLAG="--enable-openmp"
-		# what to do if none of these works?
+		# if there is no brew gcc installed try to compile with clang
 		else
-			GCC_COMPILER="`${R} CMD config CC`"
-			GPP_COMPILER="`${R} CMD config CXX`"
-			LD_LOC="-L/usr/lib/gcc -L/usr/lib" 
-			OMP_FLAG="--disable-openmp"	
+		        echo -e "* Defaulting to clang/clang++"
+		        CC="`${R} CMD config CC`"
+			CXX="`${R} CMD config CXX`"
+			if [ -z "$OMP_FLAG" ]; then
+			    OMP_FLAG="--disable-openmp"
+			fi 
 
 		fi
 		
 
             rm -f test.*
 	    (cd src/SYMPHONY && \
-		./configure CC="${GCC_COMPILER}" CXX="${GPP_COMPILER}" \
+		    ./configure \
+			CC="$CC" CXX="$CXX" \
+			CFLAGS="-w -g -O2" \
+			CXXFLAGS="-w -g -O2" \
 		--enable-static --disable-shared --with-pic \
 		--with-application=no --disable-dependency-tracking \
 		--disable-zlib --disable-bzlib "${OMP_FLAG}" \
-		# may be need to add --disable-openmp (not sure)
 		--disable-cplex-libcheck --disable-glpk-libcheck \
 		--disable-osl-libcheck --disable-soplex-libcheck \
 		--disable-xpress-libcheck)
@@ -129,6 +100,8 @@ EOF
 		--disable-cplex-libcheck --disable-glpk-libcheck \
 		--disable-osl-libcheck --disable-soplex-libcheck \
 		--disable-xpress-libcheck \
+		CFLAGS="-w -g -O2" \
+		CXXFLAGS="-w -g -O2" \
 		CC="`${R} CMD config CC`" \
 		CPP="`${R} CMD config CPP`" \
 		CXX="`${R} CMD config CXX`" \
