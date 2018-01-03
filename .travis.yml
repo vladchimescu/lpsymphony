@@ -13,6 +13,11 @@ r:
   - bioc-release
 warnings_are_errors: false
 
+r_binary_packages:
+ - testthat
+ - devtools
+ - roxygen2
+
 r_github_packages:
   - jimhester/covr
 bioc_packages:
