@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vladchimescu/lpsymphony.svg?branch=master)](https://travis-ci.org/vladchimescu/lpsymphony)
+
 `lpsymphony`: SYMPHONY Interface for Bioconductor
 ===============================================
 
