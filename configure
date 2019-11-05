@@ -106,7 +106,7 @@ EOF
 		CPP="`${R} CMD config CPP`" \
 		CXX="`${R} CMD config CXX`" \
 		CXXCPP="`${R} CMD config CXXCPP`" \
-		F77="`${R} CMD config F77`" \
+		F77="`${R} CMD config FC`" \
 		FLIBS="`${R} CMD config FLIBS`")
 	    SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
 	    SYMPHONY_INCLUDE_PATH="-ISYMPHONY/include"
