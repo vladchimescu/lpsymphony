@@ -103,9 +103,9 @@ EOF
 		CFLAGS="-w -g -O2" \
 		CXXFLAGS="-w -g -O2" \
 		CC="`${R} CMD config CC`" \
-		CPP="`${R} CMD config CPP`" \
+		#CPP="`${R} CMD config CPP`" \
 		CXX="`${R} CMD config CXX`" \
-		CXXCPP="`${R} CMD config CXXCPP`" \
+		#CXXCPP="`${R} CMD config CXXCPP`" \
 		F77="`${R} CMD config FC`" \
 		FLIBS="`${R} CMD config FLIBS`")
 	    SYMPHONY_LIBS="-lSym -lCgl -lOsiClp -lClp -lOsi -lCoinUtils"
